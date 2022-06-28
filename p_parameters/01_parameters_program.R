@@ -13,7 +13,6 @@ datasources <- c("TEST","ARS","BIPS","BIFAP","FISABIO","SIDIAP","PEDIANET","PHAR
 CDM_SOURCE<- fread(paste0(dirinput,"CDM_SOURCE.csv"))
 thisdatasource <- as.character(CDM_SOURCE[1,3])
 
-
 # set directories
 diroutput <- paste0(thisdir,"/g_output/")
 dirtemp <- paste0(thisdir,"/g_intermediate/")
@@ -101,7 +100,7 @@ suppressWarnings(if (!file.exists(dirpargen)) dir.create(file.path( dirpargen)))
 # CREATE EMPTY FILES
 ###################################################################
 
-files<-sub('\\.csv$', '', list.files(dirinput))
+files <- sub('\\.csv$', '', list.files(dirinput))
 
 if (!any(str_detect(files,"^SURVEY_ID"))) {
   print("Creating empty SURVEY_ID since none were found")
