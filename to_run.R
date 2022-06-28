@@ -1,7 +1,7 @@
 #-------------------------------
 # sample script for IMI ConcePTION Demonstration Projects
 
-# authors: Rosa Gini, Olga Paoletti, Davide Messina, Giorgio Limoncella
+# authors: Rosa Gini, Claudia Bartolini, Olga Paoletti, Davide Messina, Giorgio Limoncella
 # based on previous scripts 
 
 # v 1.0 - 27 June 2022
