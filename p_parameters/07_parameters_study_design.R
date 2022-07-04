@@ -18,4 +18,11 @@ study_years <- c("2020","2021")
 firstYearComponentAnalysis = "2019"
 secondYearComponentAnalysis = "2020"
 
-days <- ifelse(thisdatasource %in% c("ARS","TEST"),180,1)
+
+#----------------------------
+# admissible gap between observation periods (DAP-specific)
+admissible_gap_obs_periods <- vector(mode="list")
+admissible_gap_obs_periods[['ARS']] <- 365
+admissible_gap_obs_periods[['BIPS']] <- 30
+
+days <- ifelse(is.na(admissible_gap_obs_periods[[thisdatasource]]),1, admissible_gap_obs_periods[[thisdatasource]])
