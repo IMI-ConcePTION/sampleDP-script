@@ -4,56 +4,53 @@
 
 #---------------------------------------
 # list of data sources
+# to be specified for each project
 
 datasources <- c("TEST","ARS","BIPS","BIFAP","FISABIO","SIDIAP","PEDIANET","PHARMO")
-
 #---------------------------------------
 # understand which datasource the script is querying
 
-CDM_SOURCE<- fread(paste0(dirinput,"CDM_SOURCE.csv"))
-thisdatasource <- as.character(CDM_SOURCE[1,3])
+#setwd("..")
+#setwd("..")
+# dirbase <- getwd()
+# dirinput <- paste0(dirbase,"/CDMInstances/CVM2205_EFFICACY_CHILDREN/")
 
-# set directories
-diroutput <- paste0(thisdir,"/g_output/")
-dirtemp <- paste0(thisdir,"/g_intermediate/")
-direxp <- paste0(thisdir,"/g_export/")
-dirmacro <- paste0(thisdir,"/p_macro/")
-dirfigure <- paste0(thisdir,"/g_figure/")
-extension <- c(".csv")
-dirpargen <- paste0(thisdir,"/g_parameters/")
-# dirsmallcountsremoved <- paste0(thisdir,"/g_export_SMALL_COUNTS_REMOVED/")
-PathOutputFolder=paste0(thisdir,"/g_describeHTML")
+dirinput <- paste0(thisdir,"/i_simulated_data_instance/")
 
-#----------------
+set_and_create_dir <- function(x) {
+  x <- paste0(thisdir, x)
+  dir.create(file.path(x), showWarnings = F)
+  return(x)
+}
+
+# set other directories
+diroutput <- set_and_create_dir("/g_output/")
+dirtemp <- set_and_create_dir("/g_intermediate/")
+dirconceptsets <- set_and_create_dir("/g_intermediate/concept_sets/")
+direxp <- set_and_create_dir("/g_export/")
+dirmacro <- set_and_create_dir("/p_macro/")
+dirfigure <- set_and_create_dir("/g_figure/")
+dirpargen <- set_and_create_dir("/g_parameters/")
+direvents <- set_and_create_dir("/g_intermediate/events/")
+dircomponents <- set_and_create_dir("/g_intermediate/components/")
+PathOutputFolder <- set_and_create_dir("/g_describeHTML")
+dirsmallcountsremoved<- set_and_create_dir("/g_intermediate/dirsmallcountsremoved/")
+  
+rm(set_and_create_dir)
+
 # load packages
-if (!require("MASS")) install.packages("MASS")
-library(MASS)
-if (!require("haven")) install.packages("haven")
-library(haven)
-if (!require("tidyverse")) install.packages("tidyverse")
-library(dplyr)
-if (!require("lubridate")) install.packages("lubridate")
-library(lubridate)
-if (!require("AdhereR")) install.packages("AdhereR")
-library(AdhereR)
-if (!require("stringr")) install.packages("stringr")
-library(stringr)
-if (!require("purrr")) install.packages("purrr")
-library(purrr)
-if (!require("readr")) install.packages("readr")
-library(readr)
-if (!require("dplyr")) install.packages("dplyr")
-library(dplyr)
-if (!require("survival")) install.packages("survival")
-library(survival)
-if (!require("rmarkdown")) install.packages("rmarkdown")
-library(rmarkdown)
-if (!require("ggplot2")) install.packages("ggplot2")
-library(ggplot2)
-if (!require("data.table")) install.packages("data.table")
-library(data.table)
-if (!require("qpdf")) install.packages("qpdf")
-library(qpdf)
+read_library <- function(...) {
+  x <- c(...)
+  invisible(lapply(x, library, character.only = TRUE))
+}
+
+list.of.packages <- c("MASS", "haven", "tidyverse", "lubridate", "AdhereR", "stringr", "purrr", "readr", "dplyr","survival", "rmarkdown", "ggplot2", "data.table", "qpdf", "parallel", "readxl")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+invisible(lapply(list.of.packages, require, character.only = T))
+
+rm(read_library, new.packages, list.of.packages)
+#----------------
 
 #--------------
 # load macros
@@ -73,17 +70,18 @@ source(paste0(dirmacro,"SplitSpellsAgeBands.R"))
 source(paste0(dirmacro,"CalculateNumeratorNotRecurrent.R"))
 source(paste0(dirmacro,"SetToInteger.R"))
 source(paste0(dirmacro,"CountPersonTimeV13.9.R"))
-
 source(paste0(dirmacro,"ApplyComponentStrategy_v13_2.R"))
 source(paste0(dirmacro,"CreateFigureComponentStrategy_v4.R"))
 source(paste0(dirmacro,"DRECountThresholdV4.R"))
 source(paste0(dirmacro,"df_to_list_of_list.R"))
-
+source(paste0(dirmacro,"launch_step.R"))
 #--------------------
 #other parameters
 
 date_format <- "%Y%m%d"
-
+CDM_SOURCE<- fread(paste0(dirinput,"CDM_SOURCE.csv"))
+thisdatasource <- as.character(CDM_SOURCE[1,3])
+instance_creation <- ymd(CDM_SOURCE[1,"date_creation"])
 
 ###################################################################
 # CREATE FOLDERS
@@ -94,7 +92,7 @@ suppressWarnings(if (!file.exists(dirtemp)) dir.create(file.path( dirtemp)))
 suppressWarnings(if (!file.exists(direxp)) dir.create(file.path( direxp)))
 suppressWarnings(if (!file.exists(dirfigure)) dir.create(file.path( dirfigure)))
 suppressWarnings(if (!file.exists(dirpargen)) dir.create(file.path( dirpargen)))
-# suppressWarnings(if (!file.exists(dirsmallcountsremoved)) dir.create(file.path(dirsmallcountsremoved)))
+suppressWarnings(if (!file.exists(dirsmallcountsremoved)) dir.create(file.path(dirsmallcountsremoved)))
 
 ###################################################################
 # CREATE EMPTY FILES
@@ -131,6 +129,7 @@ if (!any(str_detect(files,"^MEDICINES"))) {
          paste0(dirinput, "MEDICINES_empty", ".csv"))
 }
 
+rm(files)
 #############################################
 #SAVE METADATA TO direxp
 #############################################
@@ -138,16 +137,12 @@ if (!any(str_detect(files,"^MEDICINES"))) {
 file.copy(paste0(dirinput,'/METADATA.csv'), direxp, overwrite = T)
 file.copy(paste0(dirinput,'/CDM_SOURCE.csv'), direxp, overwrite = T)
 file.copy(paste0(dirinput,'/INSTANCE.csv'), direxp, overwrite = T)
-# file.copy(paste0(dirinput,'/METADATA.csv'), dirsmallcountsremoved, overwrite = T)
-# file.copy(paste0(dirinput,'/CDM_SOURCE.csv'), dirsmallcountsremoved, overwrite = T)
-# file.copy(paste0(dirinput,'/INSTANCE.csv'), dirsmallcountsremoved, overwrite = T)
 
 #############################################
 #SAVE to_run.R TO direxp
 #############################################
 
 file.copy(paste0(thisdir,'/to_run.R'), direxp, overwrite = T)
-# file.copy(paste0(thisdir,'/to_run.R'), dirsmallcountsremoved, overwrite = T)
 
 #############################################
 #FUNCTION TO COMPUTE AGE
@@ -180,6 +175,16 @@ find_last_monday <- function(tmp_date, monday_week) {
   
   while (tmp_date %not in% monday_week) {
     tmp_date <- tmp_date - 1
+  }
+  return(tmp_date)
+}
+
+find_first_monday_year <- function(tmp_date, monday_week) {
+  
+  tmp_date <- as.Date(lubridate::ymd(tmp_date))
+  
+  while (tmp_date %not in% monday_week) {
+    tmp_date <- tmp_date + 1
   }
   return(tmp_date)
 }
@@ -252,3 +257,12 @@ bc_divide_60 <- function(df, by_cond, cols_to_sums, only_old = F, col_used = "ag
 }
 
 prop_to_total <- function(x){paste0(round(x / total_doses * 100, 2), "%")}
+
+smart_save <- function(df, folder, subpop = "") {
+  qsave(df, paste0(folder, deparse(substitute(df)), suffix[[subpop]], ".qs"), nthreads = parallel::detectCores())
+}
+
+smart_load <- function(df, folder, subpop = "") {
+  qread(paste0(folder, deparse(substitute(df)), suffix[[subpop]], ".qs"), nthreads = parallel::detectCores())
+}
+

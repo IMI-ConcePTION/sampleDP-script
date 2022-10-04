@@ -7,42 +7,22 @@ datasources_prescriptions <- c('CPRD',"PHARMO")
 thisdatasource_has_prescriptions <- ifelse(thisdatasource %in% datasources_prescriptions,TRUE,FALSE)
 
 # assign -files_ConcePTION_CDM_tables-: it is a 2-level list, listing the csv files where the tables of the local instance of the ConcePTION CDM are stored 
-files_ConcePTION_CDM_tables <- vector(mode="list")
+files_ConcePTION_CDM_tables <- list()
 
 files <- sub('\\.csv$', '', list.files(dirinput))
-for (i in 1:length(files)) {
-  if (str_detect(files[i],"^EVENTS")) {
-    files_ConcePTION_CDM_tables[["EVENTS"]] <- c(files_ConcePTION_CDM_tables[["EVENTS"]],files[i])
-  }
-  if (str_detect(files[i],"^VISIT_OCCURRENCE")) {
-    files_ConcePTION_CDM_tables[["VISIT_OCCURRENCE"]] <- c(files_ConcePTION_CDM_tables[["VISIT_OCCURRENCE"]],files[i])
-  }
-  if (str_detect(files[i],"^MEDICINES")) {
-    files_ConcePTION_CDM_tables[["MEDICINES"]] <- c(files_ConcePTION_CDM_tables[["MEDICINES"]],files[i])
-  }
-  if (str_detect(files[i],"^PROCEDURES")) {
-    files_ConcePTION_CDM_tables[["PROCEDURES"]] <- c(files_ConcePTION_CDM_tables[["PROCEDURES"]],files[i])
-  }
-  if (str_detect(files[i],"^MEDICAL_OBSERVATIONS")) {
-    files_ConcePTION_CDM_tables[["MEDICAL_OBSERVATIONS"]] <- c(files_ConcePTION_CDM_tables[["MEDICAL_OBSERVATIONS"]],files[i])
-  }
-  if (str_detect(files[i],"^SURVEY_OBSERVATIONS")) {
-    files_ConcePTION_CDM_tables[["SURVEY_OBSERVATIONS"]] <- c(files_ConcePTION_CDM_tables[["SURVEY_OBSERVATIONS"]],files[i])
-  }
-  if (str_detect(files[i],"^VACCINES")) {
-    files_ConcePTION_CDM_tables[["VACCINES"]] <- c(files_ConcePTION_CDM_tables[["VACCINES"]],files[i])
-  }
-  if (str_detect(files[i],"^SURVEY_ID")) {
-    files_ConcePTION_CDM_tables[["SURVEY_ID"]] <- c(files_ConcePTION_CDM_tables[["SURVEY_ID"]],files[i])
-  }
-  if (str_detect(files[i],"^PERSONS")) {
-    files_ConcePTION_CDM_tables[["PERSONS"]] <- c(files_ConcePTION_CDM_tables[["PERSONS"]],files[i])
-  }
-  if (str_detect(files[i],"^OBSERVATION_PERIODS")) {
-    files_ConcePTION_CDM_tables[["OBSERVATION_PERIODS"]] <- c(files_ConcePTION_CDM_tables[["OBSERVATION_PERIODS"]],files[i])
-  }
+
+category_files_ConcePTION_CDM_tables <- c("EVENTS", "VISIT_OCCURRENCE", "MEDICINES", "PROCEDURES",
+                                          "MEDICAL_OBSERVATIONS", "SURVEY_OBSERVATIONS", "VACCINES",
+                                          "SURVEY_ID", "PERSONS", "OBSERVATION_PERIODS")
+names(category_files_ConcePTION_CDM_tables) <- c("EVENTS", "VISIT_OCCURRENCE", "MEDICINES", "PROCEDURES", 
+                                                 "MEDICAL_OBSERVATIONS", "SURVEY_OBSERVATIONS", "VACCINES",
+                                                 "SURVEY_ID", "PERSONS", "OBSERVATION_PERIODS")
+
+for (a in names(category_files_ConcePTION_CDM_tables)) {
+  files_ConcePTION_CDM_tables[[a]] <- files[str_detect(files, paste0("^", category_files_ConcePTION_CDM_tables[[a]]))]
 }
 
+rm(files, category_files_ConcePTION_CDM_tables)
 
 #====================
 # assign -ConcePTION_CDM_tables-: it is a 3-level list describing the ConcePTION CDM tables, and will enter CreateConceptsetDatasets and CreateItemsetDatasets as the first parameter. the first level is the data domain (e.g., 'Diagnosis' or 'Medicines') and the second level is the list of tables having a column pertaining to that data domain 
@@ -67,31 +47,24 @@ EAV_table <- c(files_ConcePTION_CDM_tables[["MEDICAL_OBSERVATIONS"]],files_Conce
 
 # ConcePTION_CDM_EAV_tables_retrieve_source: so_source_tables and so_source_column in SO, and mo_source_table,mo_source_column in MO
 
-ConcePTION_CDM_EAV_tables_retrieve_source <- vector(mode="list")
+ConcePTION_CDM_EAV_tables_retrieve_source <- list()
+ConcePTION_CDM_EAV_tables_retrieve_meaning <- list()
 for (file in files_ConcePTION_CDM_tables[["SURVEY_OBSERVATIONS"]]){
   ConcePTION_CDM_EAV_tables_retrieve_source[[file]] <- list("so_source_table", "so_source_column")
-}
-for (file in files_ConcePTION_CDM_tables[["MEDICAL_OBSERVATIONS"]]){
-  ConcePTION_CDM_EAV_tables_retrieve_source[[file]] <- list( "mo_source_table", "mo_source_column")
-}
-
-# ConcePTION_CDM_EAV_tables_retrieve_meaning: so_origin and so_meaning in SO, and mo_origin,mo_meaning in MO
-
-ConcePTION_CDM_EAV_tables_retrieve_meaning <- vector(mode="list")
-for (file in files_ConcePTION_CDM_tables[["SURVEY_OBSERVATIONS"]]){
   ConcePTION_CDM_EAV_tables_retrieve_meaning[[file]] <- list("so_origin", "so_meaning")
 }
 for (file in files_ConcePTION_CDM_tables[["MEDICAL_OBSERVATIONS"]]){
+  ConcePTION_CDM_EAV_tables_retrieve_source[[file]] <- list( "mo_source_table", "mo_source_column")
   ConcePTION_CDM_EAV_tables_retrieve_meaning[[file]] <- list( "mo_origin", "mo_meaning")
 }
 
 #====================
 # assign -ConcePTION_CDM_codvar-: it is a 3-level list describing for each table and each data domain which column contains codes of that data domain, to be used in CreateConceptsetDatasets
 
-person_id<- vector(mode="list")
-date <- vector(mode="list")
+person_id<- list()
+date <- list()
 
-ConcePTION_CDM_codvar <- vector(mode="list")
+ConcePTION_CDM_codvar <- list()
 
 for (ds in ConcePTION_CDM_tables[["VaccineATC"]]) {
   ConcePTION_CDM_codvar[["VaccineATC"]][[ds]] <- "vx_atc"
@@ -121,7 +94,7 @@ for (ds in files_ConcePTION_CDM_tables[["EVENTS"]]){
 #====================
 # assign -ConcePTION_CDM_datevar-: it is a 3-level list describing for each table and each data domain which column contains dates, to be used in CreateConceptsetDatasets
 
-ConcePTION_CDM_datevar <- vector(mode="list")
+ConcePTION_CDM_datevar <- list()
 
 for (ds in ConcePTION_CDM_tables[["VaccineATC"]]) {
   ConcePTION_CDM_datevar[["VaccineATC"]][[ds]] <- "vx_admin_date"
@@ -150,9 +123,9 @@ ConcePTION_CDM_datevar_retrieve = ConcePTION_CDM_datevar[["Diagnosis"]]
 #====================
 # assign -person_id- and -date- and -meaning-: they are 2-levels lists, to be used in CreateItemsetDatasets, lo indicate which columns must be renamed
 
-person_id_retrieve <- vector(mode="list")
-date_retrieve <- vector(mode="list")
-meaning_retrieve <- vector(mode="list")
+person_id_retrieve <- list()
+date_retrieve <- list()
+meaning_retrieve <- list()
 
 for (ds in files_ConcePTION_CDM_tables[["EVENTS"]]){
   person_id_retrieve[[ds]] = "person_id"
@@ -188,16 +161,16 @@ for (ds in files_ConcePTION_CDM_tables[["SURVEY_OBSERVATIONS"]]){
 #---------------------------------------
 # for CreateConceptsetDataset, the columns to be renamed may change per domain, so we assign new parameters
 
-person_id <- vector(mode="list")
-date <- vector(mode="list")
-meaning <- vector(mode="list")
+person_id <- list()
+date <- list()
+meaning_renamed <- list()
 
 for (tab in c("EVENTS","VACCINES","MEDICINES","PROCEDURES","MEDICAL_OBSERVATIONS","SURVEY_OBSERVATIONS")){
   for (dom in alldomain){
     for (ds in files_ConcePTION_CDM_tables[[tab]]) {
       person_id[[dom]][[ds]] <- person_id_retrieve[[ds]]
       date[[dom]][[ds]] <- date_retrieve[[ds]]
-      meaning[[dom]][[ds]] <- meaning_retrieve[[ds]]
+      meaning_renamed[[dom]][[ds]] <- meaning_retrieve[[ds]]
     }
   }
 }
@@ -208,14 +181,14 @@ for (tab in c("EVENTS","VACCINES","MEDICINES","PROCEDURES","MEDICAL_OBSERVATIONS
 #====================
 # assign -ConcePTION_EAV_tables-: it is a 3-level list describing the tables in the CDM where entity-attribute-value records are be retrieved, associated with data domains ('Diagnosis', 'Medicines', ...)
 
-ConcePTION_CDM_EAV_tables <- vector(mode="list")
+ConcePTION_CDM_EAV_tables <- list()
 
 for (file in files_ConcePTION_CDM_tables[["SURVEY_OBSERVATIONS"]]){
   ConcePTION_CDM_EAV_tables[["Diagnosis"]][[file]] <- list(list(file, "so_source_table", "so_source_column"))
   ConcePTION_CDM_EAV_tables[["Diagnosis_free_text"]][[file]] <- list(list(file,"so_source_table","so_source_column"))
 }
 
-ConcePTION_CDM_coding_system_cols <-vector(mode="list")
+ConcePTION_CDM_coding_system_cols <-list()
 if (length(ConcePTION_CDM_EAV_tables)!=0){
   for (dom in alldomain) {
     for (i in 1:(length(ConcePTION_CDM_EAV_tables[["Diagnosis"]]))){
@@ -251,36 +224,36 @@ if (length(ConcePTION_CDM_EAV_tables)!=0){
 
 # are the next rows still needed...?
 
-#coding system
-for (dom in alldomain) {
-  for (ds in ConcePTION_CDM_tables[[dom]]) {
-    if (dom=="Diagnosis") ConcePTION_CDM_coding_system_cols[[dom]][[ds]] = "event_record_vocabulary"
-    if (dom=="Diagnosis_free_text") ConcePTION_CDM_coding_system_cols[[dom]][[ds]] = "event_record_vocabulary"
-    #    if (dom=="Medicines") ConcePTION_CDM_coding_system_cols[[dom]][[ds]] = "code_indication_vocabulary"
-  }
-}
+# #coding system
+# for (dom in alldomain) {
+#   for (ds in ConcePTION_CDM_tables[[dom]]) {
+#     if (dom=="Diagnosis") ConcePTION_CDM_coding_system_cols[[dom]][[ds]] = "event_record_vocabulary"
+#     if (dom=="Diagnosis_free_text") ConcePTION_CDM_coding_system_cols[[dom]][[ds]] = "event_record_vocabulary"
+#     #    if (dom=="Medicines") ConcePTION_CDM_coding_system_cols[[dom]][[ds]] = "code_indication_vocabulary"
+#   }
+# }
 
 
-# THE NEXT LINES OF CODES ARE TO BE REVISED - ARE THEY STILL NECESSARY?
-
-
+# # THE NEXT LINES OF CODES ARE TO BE REVISED - ARE THEY STILL NECESSARY?
+# 
+# 
 files_par<-sub('\\.RData$', '', list.files(dirpargen))
 
 if(length(files_par)>0){
   for (i in 1:length(files_par)) {
-    if (str_detect(files_par[i],"^ConcePTION_CDM_EAV_attributes")) { 
-      load(paste0(dirpargen,files_par[i],".RData")) 
-      load(paste0(dirpargen,"ConcePTION_CDM_coding_system_list.RData")) 
+    if (str_detect(files_par[i],"^ConcePTION_CDM_EAV_attributes")) {
+      load(paste0(dirpargen,files_par[i],".RData"))
+      load(paste0(dirpargen,"ConcePTION_CDM_coding_system_list.RData"))
       print("upload existing EAV_attributes")
     } else {
       print("create EAV_attributes")
-      
+
       ConcePTION_CDM_coding_system_list<-vector(mode="list")
       METADATA<-fread(paste0(dirinput,"METADATA.csv"))
       ConcePTION_CDM_coding_system_list<-unique(unlist(str_split(unique(METADATA[type_of_metadata=="list_of_values" & (columnname=="so_unit" | columnname=="mo_record_vocabulary"),values])," ")))
-      
+
       ConcePTION_CDM_EAV_attributes<-vector(mode="list")
-      
+
       if (length(ConcePTION_CDM_EAV_tables)!=0 ){
         for (i in 1:(length(ConcePTION_CDM_EAV_tables[["Diagnosis"]]))){
           for (ds in ConcePTION_CDM_EAV_tables[["Diagnosis"]][[i]][[1]][[1]]) {
@@ -293,14 +266,14 @@ if(length(files_par)>0){
                 temp1<-unique(temp[so_unit %in% cod_syst,.(so_source_table,so_source_column)])
                 if (nrow(temp1)!=0) ConcePTION_CDM_EAV_attributes[["Diagnosis"]][[ds]][[thisdatasource]][[cod_syst]]<-as.list(as.data.table(t(temp1)))
               }
-              
+
             }
           }
         }
       }
-      
+
       ConcePTION_CDM_EAV_attributes_this_datasource<-vector(mode="list")
-      
+
       if (length(ConcePTION_CDM_EAV_attributes)!=0 ){
         for (t in  names(ConcePTION_CDM_EAV_attributes)) {
           for (f in names(ConcePTION_CDM_EAV_attributes[[t]])) {
@@ -312,22 +285,22 @@ if(length(files_par)>0){
           }
         }
       }
-      
+
       save(ConcePTION_CDM_EAV_attributes_this_datasource, file = paste0(dirpargen,"ConcePTION_CDM_EAV_attributes.RData"))
       save(ConcePTION_CDM_coding_system_list, file = paste0(dirpargen,"ConcePTION_CDM_coding_system_list.RData"))
-      
+
     }
   }
 } else {
-  
+
   print("create EAV_attributes")
-  
+
   ConcePTION_CDM_coding_system_list<-vector(mode="list")
   METADATA<-fread(paste0(dirinput,"METADATA.csv"))
   ConcePTION_CDM_coding_system_list<-unique(unlist(str_split(unique(METADATA[type_of_metadata=="list_of_values" & (columnname=="so_unit" | columnname=="mo_record_vocabulary"),values])," ")))
-  
+
   ConcePTION_CDM_EAV_attributes<-vector(mode="list")
-  
+
   if (length(ConcePTION_CDM_EAV_tables)!=0 ){
     for (i in 1:(length(ConcePTION_CDM_EAV_tables[["Diagnosis"]]))){
       for (ds in ConcePTION_CDM_EAV_tables[["Diagnosis"]][[i]][[1]][[1]]) {
@@ -340,14 +313,14 @@ if(length(files_par)>0){
             temp1<-unique(temp[so_unit %in% cod_syst,.(so_source_table,so_source_column)])
             if (nrow(temp1)!=0) ConcePTION_CDM_EAV_attributes[["Diagnosis"]][[ds]][[thisdatasource]][[cod_syst]]<-as.list(as.data.table(t(temp1)))
           }
-          
+
         }
       }
     }
   }
-  
+
   ConcePTION_CDM_EAV_attributes_this_datasource<-vector(mode="list")
-  
+
   if (length(ConcePTION_CDM_EAV_attributes)!=0 ){
     for (t in  names(ConcePTION_CDM_EAV_attributes)) {
       for (f in names(ConcePTION_CDM_EAV_attributes[[t]])) {
@@ -359,10 +332,10 @@ if(length(files_par)>0){
       }
     }
   }
-  
+
   save(ConcePTION_CDM_EAV_attributes_this_datasource, file = paste0(dirpargen,"ConcePTION_CDM_EAV_attributes.RData"))
   save(ConcePTION_CDM_coding_system_list, file = paste0(dirpargen,"ConcePTION_CDM_coding_system_list.RData"))
-  
+
 }
 
 ConcePTION_CDM_EAV_attributes_this_datasource<-vector(mode="list")

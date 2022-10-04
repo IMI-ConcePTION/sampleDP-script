@@ -1,8 +1,11 @@
 #-------------------------------
 # sample script for IMI ConcePTION Demonstration Projects
 
-# authors: Rosa Gini, Olga Paoletti, Davide Messina, Giorgio Limoncella
+# authors: Rosa Gini, Claudia Bartolini, Olga Paoletti, Davide Messina, Giorgio Limoncella
 # based on previous scripts 
+
+# v 2.0 - 25 September 2022
+# Improve of the scriptbased on CVM script 
 
 # v 1.0 - 27 June 2022
 # Initial release
@@ -18,6 +21,11 @@ thisdir <- setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 # @DAP: please modify the parametr dirinput and set it to the directory where your CDM instance is stored
 
 dirinput <- paste0(thisdir,"/i_simulated_data_instance/")
+
+#-------------------------------
+# @DAP: please modify the parametr dirpregnancyinput and set it to the directory where your CDM instance is stored
+
+dirpregnancyinput <- paste0(thisdir,"/i_simulated_data_instance/pregnancy/")
 
 
 #----------------
@@ -45,12 +53,29 @@ source(paste0(thisdir,"/p_parameters/06_algorithms.R"))
 # parameters for study_design
 source(paste0(thisdir,"/p_parameters/07_study_design.R"))
 
+source(paste0(thisdir,"/p_parameters/99_saving_all_parameters.R"))
+
 
 #----------------
 # RUn STEPS
 #----------------
 
-# 01 RETRIEVE RECORDS FRM CDM
+# CREATE EXCLUSION CRITERIA and CHECK CORRECT DATE OF BIRTH
+launch_step("p_steps/01_T2_10_create_persons.R")
+
+#COMPUTE SPELLS OF TIME FROM OBSERVATION_PERIODS
+launch_step("p_steps/01_T2_20_apply_CreateSpells.R")
+
+# APPLY THE FUNCTION CreateConceptSetDatasets TO CREATE ONE DATASET PER CONCEPT SET CONTAINING ONLY RECORDS WITH CODES OF INTEREST
+launch_step("p_steps/01_T2_31_CreateConceptSetDatasets.R")
+
+# RETRIEVE ITEMSET DATASETS
+launch_step("p_steps/01_T2_32_CreateItemSetDatasets.R")
+
+# RETRIEVE PROMPT DATASETS
+launch_step("p_steps/01_T2_33_CreatePromptSetDatasets.R")
+
+
 
 system.time(source(paste0(thisdir,"/p_steps/step_01_1_T2.1_create_conceptset_datasets.R")))
 system.time(source(paste0(thisdir,"/p_steps/step_01_2_T2.1_create_spells.R")))

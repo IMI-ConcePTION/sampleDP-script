@@ -4,6 +4,9 @@
 # authors: Rosa Gini, Claudia Bartolini, Olga Paoletti, Davide Messina, Giorgio Limoncella
 # based on previous scripts 
 
+# v 2.0 - 25 September 2022
+# Improve of the scriptbased on CVM script 
+
 # v 1.0 - 27 June 2022
 # Initial release
 
@@ -44,11 +47,16 @@ source(paste0(thisdir,"/p_parameters/04_itemsets.R"))
 # subpopulations (not to be used in DPs)
 source(paste0(thisdir,"/p_parameters/05_subpopulations_restricting_meanings.R"))
 
+#create outcomes and covariate list of strings
+source(paste0(thisdir,"/p_parameters/06_variable_lists.R"))
+
 # parameters for algortihms
-source(paste0(thisdir,"/p_parameters/06_algorithms.R"))
+source(paste0(thisdir,"/p_parameters/07_algorithms.R"))
 
 # parameters for study_design
-source(paste0(thisdir,"/p_parameters/07_study_design.R"))
+source(paste0(thisdir,"/p_parameters/08_study_design.R"))
+
+source(paste0(thisdir,"/p_parameters/99_saving_all_parameters.R"))
 
 
 #----------------
@@ -57,23 +65,32 @@ source(paste0(thisdir,"/p_parameters/07_study_design.R"))
 
 # 01 RETRIEVE RECORDS FRM CDM
 
-system.time(source(paste0(thisdir,"/p_steps/step_01_1_T2.1_create_conceptset_datasets.R")))
-system.time(source(paste0(thisdir,"/p_steps/step_01_2_T2.1_create_spells.R")))
-system.time(source(paste0(thisdir,"/p_steps/step_01_3_T2.1_create_dates_in_PERSONS.R")))
-system.time(source(paste0(thisdir,"/p_steps/step_01_4_T2.1_create_prompt_and_itemset_datasets.R")))
+# CREATE EXCLUSION CRITERIA and CHECK CORRECT DATE OF BIRTH
+launch_step("p_steps/01_T2_10_create_persons.R")
 
-#02 quality checks
+#COMPUTE SPELLS OF TIME FROM OBSERVATION_PERIODS
+launch_step("p_steps/01_T2_20_apply_CreateSpells.R")
 
-system.time(source(paste0(thisdir,"/p_steps/step_02_1_T2_create_QC_criteria.R")))
-system.time(source(paste0(thisdir,"/p_steps/step_02_2_T3_apply_QC_exclusion_criteria.R")))
+# APPLY THE FUNCTION CreateConceptSetDatasets TO CREATE ONE DATASET PER CONCEPT SET CONTAINING ONLY RECORDS WITH CODES OF INTEREST
+launch_step("p_steps/01_T2_31_CreateConceptSetDatasets.R")
 
-#03 create exclusion criteria
-system.time(source(paste0(thisdir,"/p_steps/step_03_1_T2_create_exclusion_criteria.R")))
-system.time(source(paste0(thisdir,"/p_steps/step_03_2_T2_merge_persons_concept.R")))
+# RETRIEVE ITEMSET DATASETS
+launch_step("p_steps/01_T2_32_CreateItemSetDatasets.R")
 
-#04 apply exclusion criteria
-system.time(source(paste0(thisdir,"/p_steps/step_04_1_T3_apply_exclusion_criteria.R")))
-system.time(source(paste0(thisdir,"/p_steps/step_04_2_T3_apply_quality_check_exclusion_criteria_doses.R")))
-##use flowchart (apply also quality checks)
+# RETRIEVE PROMPT DATASETS
+launch_step("p_steps/01_T2_33_CreatePromptSetDatasets.R")
 
-#05 create D3s 
+# CLEAN THE SPELLS
+launch_step("p_steps/01_T2_50_clean_spells.R")
+
+# CREATE EXCLUSION CRITERIA for persons/spells
+launch_step("p_steps/01_T2_60_selection_criteria_from_PERSON_to_study_population.R")
+
+launch_step("p_steps/02_T3_10_create_study_population.R")
+
+#will run after the definition of algorithms and variables 
+
+# launch_step("p_steps/03_T2_10_create_D3_outcomes_simple_algorithm.R")
+# launch_step("p_steps/03_T2_11_create_D3_outcomes_complex_algorithm.R")
+# launch_step("p_steps/03_T2_12_create_D3_event_outcomes_ALL.R")
+# launch_step("p_steps/03_T2_40_create_study_population_main_variables.R")
