@@ -9,9 +9,9 @@ meanings_of_this_study[["PC"]]=c("primary_care_event","primary_care_diagnosis","
 condmeaning <- list()
 for (level1 in c("HOSP","PC")) {
   for (meaning in meanings_of_this_study[[level1]]) {
-    if (length(condmeaning[[level1]])==0) {condmeaning[[level1]]=paste0("meaning_of_event=='",meanings_of_this_study[[level1]][[1]],"'")
+    if (length(condmeaning[[level1]])==0) {condmeaning[[level1]]=paste0("meaning_renamed == '",meanings_of_this_study[[level1]][[1]],"'")
     }else{
-      condmeaning[[level1]]=paste0(condmeaning[[level1]], " | meaning_of_event=='",meaning,"'")
+      condmeaning[[level1]]=paste0(condmeaning[[level1]], " | meaning_renamed == '",meaning,"'")
     }
   }
 }
