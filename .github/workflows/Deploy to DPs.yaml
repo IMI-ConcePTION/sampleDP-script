@@ -1,0 +1,39 @@
+
+name: Deploy to demonstration projects
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    environment: test environment
+    name: Update DPs
+    steps:
+      - name: Update DP1
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PWR_TOEKN }}" \
+            https://api.github.com/repos/IMI-ConcePTION/DP4-migraine/dispatches \
+            -d '{"event_type":"deploy-to-dp","client_payload":{"unit":false,"integration":true}}'
+            
+      - name: Update DP3
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PWR_TOEKN }}" \
+            https://api.github.com/repos/IMI-ConcePTION/DP4-migraine/dispatches \
+            -d '{"event_type":"deploy-to-dp","client_payload":{"unit":false,"integration":true}}'
+            
+      - name: Update DP4
+        run: |
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PWR_TOEKN }}" \
+            https://api.github.com/repos/IMI-ConcePTION/DP4-migraine/dispatches \
+            -d '{"event_type":"deploy-to-dp","client_payload":{"unit":false,"integration":true}}'
