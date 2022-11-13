@@ -11,12 +11,20 @@ jobs:
     environment: test environment
     name: Update DPs
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: wow-actions/use-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.PRIVATE_KEY }}
+          env_name: bot_token
+          
       - name: Update DP1
         run: |
           curl \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.PWR_TOEKN }}" \
+            -H "Authorization: Bearer ${{ env.bot_token }}" \
             https://api.github.com/repos/IMI-ConcePTION/DP1-Neuropathic-pain/dispatches \
             -d '{"event_type":"deploy-to-dp","client_payload":{"unit":false,"integration":true}}'
             
@@ -25,7 +33,7 @@ jobs:
           curl \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.PWR_TOEKN }}" \
+            -H "Authorization: Bearer ${{ env.bot_token }}" \
             https://api.github.com/repos/IMI-ConcePTION/D2_SSRI-SNRI/dispatches \
             -d '{"event_type":"deploy-to-dp","client_payload":{"unit":false,"integration":true}}'
             
@@ -34,6 +42,6 @@ jobs:
           curl \
             -X POST \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ secrets.PWR_TOEKN }}" \
+            -H "Authorization: Bearer ${{ env.bot_token }}" \
             https://api.github.com/repos/IMI-ConcePTION/DP3-MS-SLE/dispatches \
             -d '{"event_type":"deploy-to-dp","client_payload":{"unit":false,"integration":true}}'
