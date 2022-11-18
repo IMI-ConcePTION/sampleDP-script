@@ -18,14 +18,14 @@ jobs:
           private_key: ${{ secrets.PRIVATE_KEY }}
           env_name: bot_token
           
-      - name: Update DP1
-        run: |
-          curl \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${{ env.bot_token }}" \
-            https://api.github.com/repos/IMI-ConcePTION/DP1-Neuropathic-pain/dispatches \
-            -d '{"event_type":"deploy-to-dp","client_payload":{"unit":false,"integration":true}}'
+      # - name: Update DP1
+      #   run: |
+      #     curl \
+      #       -X POST \
+      #       -H "Accept: application/vnd.github+json" \
+      #       -H "Authorization: Bearer ${{ env.bot_token }}" \
+      #       https://api.github.com/repos/IMI-ConcePTION/DP1-Neuropathic-pain/dispatches \
+      #       -d '{"event_type":"deploy-to-dp","client_payload":{"unit":false,"integration":true}}'
             
       - name: Update DP2
         run: |
