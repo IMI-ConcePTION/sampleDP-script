@@ -1,4 +1,3 @@
-
 name: Deploy to demonstration projects
 on:
   workflow_dispatch:
