@@ -3,8 +3,9 @@
 # this file should not be modified
 ###################################################################
 
-datasources_prescriptions <- c('CPRD',"PHARMO")
-thisdatasource_has_prescriptions <- ifelse(thisdatasource %in% datasources_prescriptions,TRUE,FALSE)
+datasources_prescriptions <- c("CPRD", "PHARMO")
+thisdatasource_has_prescriptions <- ifelse(thisdatasource %in% datasources_prescriptions, TRUE, FALSE)
+rm(datasources_prescriptions)
 
 # assign -files_ConcePTION_CDM_tables-: it is a 2-level list, listing the csv files where the tables of the local instance of the ConcePTION CDM are stored 
 files_ConcePTION_CDM_tables <- list()
@@ -134,7 +135,7 @@ for (ds in files_ConcePTION_CDM_tables[["EVENTS"]]){
 }
 for (ds in files_ConcePTION_CDM_tables[["MEDICINES"]]){
   person_id_retrieve[[ds]] = "person_id"
-  date_retrieve[[ds]] = ifelse(thisdatasource %in% datasources_prescriptions,"date_prescription","date_dispensing")
+  date_retrieve[[ds]] = ifelse(thisdatasource_has_prescriptions, "date_prescription", "date_dispensing")
   meaning_retrieve[[ds]] = "meaning_of_drug_record"
 }
 for (ds in files_ConcePTION_CDM_tables[["PROCEDURES"]]){
