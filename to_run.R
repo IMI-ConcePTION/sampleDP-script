@@ -18,15 +18,12 @@ thisdir <- setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 thisdir <- setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 
 #-------------------------------
-# @DAP: please modify the parametr dirinput and set it to the directory where your CDM instance is stored
-
+# @DAP: please modify the following parameter
+# dirinput: set it to the directory where your CDM instance is stored
 dirinput <- paste0(thisdir,"/i_simulated_data_instance/")
 
-#-------------------------------
-# @DAP: please modify the parametr dirpregnancyinput and set it to the directory where your CDM instance is stored
-
+# dirpregnancyinput: set it to the directory where your CDM instance is stored
 dirpregnancyinput <- paste0(thisdir,"/i_simulated_data_instance/pregnancy/")
-
 
 #----------------
 #LOAD PARAMTETERS
