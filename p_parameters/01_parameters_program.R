@@ -44,9 +44,10 @@ read_library <- function(...) {
   invisible(lapply(x, library, character.only = TRUE))
 }
 
-list.of.packages <- c("MASS", "haven", "tidyverse", "lubridate", "AdhereR", "stringr", "purrr", "readr", "dplyr","survival", "rmarkdown", "ggplot2", "data.table", "qpdf", "parallel", "readxl")
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages)
+list.of.packages <- c("MASS", "haven", "tidyverse", "lubridate", "AdhereR", "stringr", "purrr", "readr", "dplyr",
+                      "survival", "rmarkdown", "ggplot2", "data.table", "qpdf", "parallel", "readxl")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[, "Package"])]
+if (length(new.packages)) install.packages(new.packages)
 invisible(lapply(list.of.packages, require, character.only = T))
 
 rm(read_library, new.packages, list.of.packages)
@@ -60,16 +61,6 @@ source(paste0(dirmacro,"CreateItemsetDatasets.R"))
 source(paste0(dirmacro,"MergeFilterAndCollapse_v5.R"))
 source(paste0(dirmacro,"CreateSpells_v15.R"))
 source(paste0(dirmacro,"CreateFlowChart.R"))
-source(paste0(dirmacro,"CleanOutcomes.R"))
-source(paste0(dirmacro,"CreateAgebandIntervals.R"))
-source(paste0(dirmacro,"CreateTimeIntervals.R"))
-source(paste0(dirmacro,"CheckAndPrepareDates.R"))
-source(paste0(dirmacro,"CalculateSubtractionDenominator.R"))
-source(paste0(dirmacro,"CalculateNumeratorAggregated.R"))
-source(paste0(dirmacro,"SplitSpellsAgeBands.R"))
-source(paste0(dirmacro,"CalculateNumeratorNotRecurrent.R"))
-source(paste0(dirmacro,"SetToInteger.R"))
-source(paste0(dirmacro,"CountPersonTimeV13.9.R"))
 source(paste0(dirmacro,"ApplyComponentStrategy_v13_2.R"))
 source(paste0(dirmacro,"CreateFigureComponentStrategy_v4.R"))
 source(paste0(dirmacro,"DRECountThresholdV4.R"))
