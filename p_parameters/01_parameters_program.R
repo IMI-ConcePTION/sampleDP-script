@@ -121,6 +121,7 @@ if (!any(str_detect(files,"^MEDICINES"))) {
 }
 
 rm(files)
+
 #############################################
 #SAVE METADATA TO direxp
 #############################################
@@ -160,26 +161,6 @@ age_fast = function(from, to) {
 
 `%not in%` = Negate(`%in%`)
 
-find_last_monday <- function(tmp_date, monday_week) {
-  
-  tmp_date <- as.Date(lubridate::ymd(tmp_date))
-  
-  while (tmp_date %not in% monday_week) {
-    tmp_date <- tmp_date - 1
-  }
-  return(tmp_date)
-}
-
-find_first_monday_year <- function(tmp_date, monday_week) {
-  
-  tmp_date <- as.Date(lubridate::ymd(tmp_date))
-  
-  while (tmp_date %not in% monday_week) {
-    tmp_date <- tmp_date + 1
-  }
-  return(tmp_date)
-}
-
 correct_difftime <- function(t1, t2, t_period = "days") {
   return(difftime(t1, t2, units = t_period) + 1)
 }
@@ -197,19 +178,6 @@ join_and_replace <- function(df1, df2, join_cond, old_name) {
   setnames(temp, old_name, join_cond[1])
 }
 
-import_concepts <- function(dirtemp, concept_set) {
-  concepts<-data.table()
-  for (concept in concept_set) {
-    load(paste0(dirtemp, concept,".RData"))
-    if (exists("concepts")) {
-      concepts <- rbind(concepts, get(concept))
-    } else {
-      concepts <- get(concept)
-    }
-  }
-  return(concepts)
-}
-
 exactPoiCI <- function (df, X, PT, conf.level = 0.95) {
   alpha <- 1 - conf.level
   IR <- df[, get(X)]
@@ -220,34 +188,6 @@ exactPoiCI <- function (df, X, PT, conf.level = 0.95) {
   temp_list <- lapply(temp_list, function(x) {fifelse(x == Inf, 0, x)})
   return(lapply(temp_list, round, 2))
 }
-
-correct_col_type <- function(df) {
-  for (i in names(df)){
-    df[is.na(get(i)), (i) := 0]
-    if (!inherits(df[, get(i)], "IDate")) {
-      df[is.integer(get(i)), (i) := as.numeric(get(i))]
-    }
-    df[is.logical(get(i)), (i) := as.numeric(get(i))]
-  }
-  return(df)
-}
-
-bc_divide_60 <- function(df, by_cond, cols_to_sums, only_old = F, col_used = "ageband_at_study_entry") {
-  older60 <- copy(df)[get(col_used) %in% Agebands60,
-                      lapply(.SD, sum, na.rm=TRUE), by = by_cond, .SDcols = cols_to_sums]
-  older60 <- unique(older60[, c(col_used) := "60+"])
-  if (!only_old) {
-    younger60 <- copy(df)[get(col_used) %in% Agebands059,
-                          lapply(.SD, sum, na.rm=TRUE), by = by_cond, .SDcols = cols_to_sums]
-    younger60 <- unique(younger60[, c(col_used) := "0-59"])
-    
-    df <- rbind(df, younger60)
-  }
-  df <- rbind(df, older60)
-  return(df)
-}
-
-prop_to_total <- function(x){paste0(round(x / total_doses * 100, 2), "%")}
 
 smart_save <- function(df, folder, subpop = "") {
   qsave(df, paste0(folder, deparse(substitute(df)), suffix[[subpop]], ".qs"), nthreads = parallel::detectCores())
