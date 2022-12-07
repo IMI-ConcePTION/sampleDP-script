@@ -140,13 +140,8 @@ file.copy(paste0(thisdir,'/to_run.R'), direxp, overwrite = T)
 #FUNCTION TO COMPUTE AGE
 #############################################
 
-Agebands = c(-1, 4, 11, 17, 24, 29, 39, 49, 59, 69, 79, Inf)
 Agebands_countpersontime = c(0, 4, 11, 17, 24, 29, 39, 49, 59, 69, 79)
 Agebands_labels = c("0-4","5-11","12-17","18-24","25-29", "30-39", "40-49","50-59","60-69", "70-79","80+")
-Agebands_children = c("0-4","5-11","12-17")
-
-Agebands60 <- c("60-69", "70-79","80+")
-Agebands059 <- c("0-4","5-11","12-17","18-24","25-29", "30-39", "40-49","50-59")
 
 age_fast = function(from, to) {
   from_lt = as.POSIXlt(from)
