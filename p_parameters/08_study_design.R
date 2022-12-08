@@ -14,13 +14,13 @@ study_end <- min(instance_creation, ymd(CDM_SOURCE[1,"recommended_end_date"]), n
 study_years <- c("2020","2021")
 
 
-firstYearComponentAnalysis = "2019"
-secondYearComponentAnalysis = "2020"
+firstYearComponentAnalysis <- "2019"
+secondYearComponentAnalysis <- "2020"
 
 
 #----------------------------
 # admissible gap between observation periods (DAP-specific)
-admissible_gap_obs_periods <- vector(mode="list")
+admissible_gap_obs_periods <- vector(mode = "list")
 admissible_gap_obs_periods[['ARS']] <- 365
 admissible_gap_obs_periods[['TEST']] <- 365
 admissible_gap_obs_periods[['BIPS']] <- 30
@@ -30,4 +30,4 @@ days <- ifelse(thisdatasource %not in% names(admissible_gap_obs_periods),
 
 
 # define number of days a spells should not be shorter
-min_spell_lenght<-365
+min_spell_lenght <- 365
