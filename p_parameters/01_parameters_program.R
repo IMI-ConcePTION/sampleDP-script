@@ -69,7 +69,6 @@ source(paste0(dirmacro,"launch_step.R"))
 #--------------------
 #other parameters
 
-date_format <- "%Y%m%d"
 CDM_SOURCE<- fread(paste0(dirinput,"CDM_SOURCE.csv"))
 thisdatasource <- as.character(CDM_SOURCE[1,3])
 instance_creation <- ymd(CDM_SOURCE[1,"date_creation"])
