@@ -183,6 +183,16 @@ exactPoiCI <- function (df, X, PT, conf.level = 0.95) {
   return(lapply(temp_list, round, 2))
 }
 
+read_CDM_tables <- function(x) {
+  final_table <- data.table()
+  for (file in files_ConcePTION_CDM_tables[[x]]) {
+    temp <- fread(paste0(dirinput, file, ".csv"), colClasses = list(character = "person_id"))
+    final_table <- rbind(final_table, temp, fill = T)
+    rm(temp)
+  }
+  return(final_table)
+}
+
 smart_save <- function(df, folder, subpop = "") {
   qsave(df, paste0(folder, deparse(substitute(df)), suffix[[subpop]], ".qs"), nthreads = parallel::detectCores())
 }
