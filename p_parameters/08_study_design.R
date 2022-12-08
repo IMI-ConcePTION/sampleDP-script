@@ -25,8 +25,8 @@ admissible_gap_obs_periods[['ARS']] <- 365
 admissible_gap_obs_periods[['TEST']] <- 365
 admissible_gap_obs_periods[['BIPS']] <- 30
 
-days <- ifelse(is.na(admissible_gap_obs_periods[[thisdatasource]]),1, admissible_gap_obs_periods[[thisdatasource]])
-
+days <- ifelse(thisdatasource %not in% names(admissible_gap_obs_periods),
+               1, admissible_gap_obs_periods[[thisdatasource]])
 
 
 # define number of days a spells should not be shorter
