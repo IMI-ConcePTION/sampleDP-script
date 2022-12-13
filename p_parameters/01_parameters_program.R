@@ -29,11 +29,9 @@ dirtemp <- set_and_create_dir("/g_intermediate/")
 dirconceptsets <- set_and_create_dir("/g_intermediate/concept_sets/")
 direxp <- set_and_create_dir("/g_export/")
 dirmacro <- set_and_create_dir("/p_macro/")
-dirfigure <- set_and_create_dir("/g_figure/")
 dirpargen <- set_and_create_dir("/g_parameters/")
 direvents <- set_and_create_dir("/g_intermediate/events/")
 dircomponents <- set_and_create_dir("/g_intermediate/components/")
-PathOutputFolder <- set_and_create_dir("/g_describeHTML")
 dirsmallcountsremoved<- set_and_create_dir("/g_intermediate/dirsmallcountsremoved/")
   
 rm(set_and_create_dir)
@@ -170,17 +168,6 @@ join_and_replace <- function(df1, df2, join_cond, old_name) {
   temp <- merge(df1, df2, by.x = join_cond[1], by.y = join_cond[2])
   temp[, join_cond[1] := NULL]
   setnames(temp, old_name, join_cond[1])
-}
-
-exactPoiCI <- function (df, X, PT, conf.level = 0.95) {
-  alpha <- 1 - conf.level
-  IR <- df[, get(X)]
-  upper <- df[, 0.5 * qchisq((1-(alpha/2)), 2*(get(X)+1))]
-  lower <- df[, 0.5 * qchisq(alpha/2, 2*get(X))]
-  temp_list <- lapply(list(IR, lower, upper), `/`, df[, get(PT)/365.25])
-  temp_list <- lapply(temp_list, `*`, 100000)
-  temp_list <- lapply(temp_list, function(x) {fifelse(x == Inf, 0, x)})
-  return(lapply(temp_list, round, 2))
 }
 
 read_CDM_tables <- function(x) {
