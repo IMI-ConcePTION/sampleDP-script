@@ -67,12 +67,16 @@ source(paste0(dirmacro,"CreateFigureComponentStrategy_v4.R"))
 source(paste0(dirmacro,"DRECountThresholdV4.R"))
 source(paste0(dirmacro,"df_to_list_of_list.R"))
 source(paste0(dirmacro,"launch_step.R"))
-#--------------------
-#other parameters
+
+###################################################################
+# RETRIEVE INFORMATION FROM CDM_SOURCE
+###################################################################
 
 CDM_SOURCE<- fread(paste0(dirinput,"CDM_SOURCE.csv"))
 thisdatasource <- as.character(CDM_SOURCE[1,3])
 instance_creation <- ymd(CDM_SOURCE[1,"date_creation"])
+recommended_end_date <- ymd(CDM_SOURCE[1,"recommended_end_date"])
+rm(CDM_SOURCE)
 
 ###################################################################
 # CREATE EMPTY FILES

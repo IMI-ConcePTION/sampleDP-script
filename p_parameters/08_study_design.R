@@ -9,7 +9,7 @@ firstjan2021 <- ymd(20210101)
 study_start <- ymd(20200101)
 start_lookback <- ymd(20190101)
 
-study_end <- min(instance_creation, ymd(CDM_SOURCE[1,"recommended_end_date"]), na.rm = T)
+study_end <- min(instance_creation, recommended_end_date, na.rm = T)
 
 study_years <- c("2020","2021")
 
