@@ -23,7 +23,10 @@ set_and_create_dir <- function(x) {
   return(x)
 }
 
-# set other directories
+###################################################################
+# SET AND CREATE FOLDERS IF NECESSARY
+###################################################################
+
 diroutput <- set_and_create_dir("/g_output/")
 dirtemp <- set_and_create_dir("/g_intermediate/")
 dirconceptsets <- set_and_create_dir("/g_intermediate/concept_sets/")
@@ -70,17 +73,6 @@ source(paste0(dirmacro,"launch_step.R"))
 CDM_SOURCE<- fread(paste0(dirinput,"CDM_SOURCE.csv"))
 thisdatasource <- as.character(CDM_SOURCE[1,3])
 instance_creation <- ymd(CDM_SOURCE[1,"date_creation"])
-
-###################################################################
-# CREATE FOLDERS
-###################################################################
-
-suppressWarnings(if (!file.exists(diroutput)) dir.create(file.path( diroutput)))
-suppressWarnings(if (!file.exists(dirtemp)) dir.create(file.path( dirtemp)))
-suppressWarnings(if (!file.exists(direxp)) dir.create(file.path( direxp)))
-suppressWarnings(if (!file.exists(dirfigure)) dir.create(file.path( dirfigure)))
-suppressWarnings(if (!file.exists(dirpargen)) dir.create(file.path( dirpargen)))
-suppressWarnings(if (!file.exists(dirsmallcountsremoved)) dir.create(file.path(dirsmallcountsremoved)))
 
 ###################################################################
 # CREATE EMPTY FILES
