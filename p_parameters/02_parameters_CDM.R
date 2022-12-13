@@ -355,4 +355,5 @@ if (length(ConcePTION_CDM_EAV_attributes)!=0 ){
 
 
 
-rm(temp,temp1)
+rm(temp, temp1, i, s, t, tab, thisdatasource_has_prescriptions, f, file, files_par, dom, ds, EAV_table, a, alldomain,
+   cod_syst, ConcePTION_CDM_coding_system_list, METADATA)

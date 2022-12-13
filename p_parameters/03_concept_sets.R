@@ -25,6 +25,7 @@ for (concept in c(NARROW_POSSIBLE_conceptsets)) {
   concept_set_domains[[concept]] = "Diagnosis"
   concept_set_domains[[concept]] = "Diagnosis"
 }
+rm(concept)
 
 
 #-------------
