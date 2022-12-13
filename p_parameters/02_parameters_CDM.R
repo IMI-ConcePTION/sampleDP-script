@@ -274,7 +274,9 @@ if(all(str %in% files_par)) {
               }
 
             }
+            rm(cod_syst, temp1)
           }
+          rm(temp)
         }
       }
 
@@ -289,13 +291,15 @@ if(all(str %in% files_par)) {
             }
           }
         }
+        rm(t, f, s)
       }
 
       save(ConcePTION_CDM_EAV_attributes_this_datasource, file = paste0(dirpargen,"ConcePTION_CDM_EAV_attributes.RData"))
       save(ConcePTION_CDM_coding_system_list, file = paste0(dirpargen,"ConcePTION_CDM_coding_system_list.RData"))
 
+      rm(METADATA)
     }
 
 
-rm(temp, temp1, i, s, t, tab, thisdatasource_has_prescriptions, f, file, files_par, dom, ds, EAV_table, a, alldomain,
-   cod_syst, ConcePTION_CDM_coding_system_list, METADATA)
+rm(i, tab, thisdatasource_has_prescriptions, file, files_par, dom, ds, EAV_table, a, alldomain,
+   ConcePTION_CDM_coding_system_list)
