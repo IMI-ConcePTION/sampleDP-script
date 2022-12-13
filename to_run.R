@@ -33,10 +33,9 @@ source(paste0(thisdir,"/p_parameters/01_parameters_program.R")) #GENERAL
 source(paste0(thisdir,"/p_parameters/02_parameters_CDM.R")) #CDM
 source(paste0(thisdir,"/p_parameters/03_concept_sets.R")) #CONCEPTSETS
 source(paste0(thisdir,"/p_parameters/04_itemsets.R")) #ITEMSETS
-source(paste0(thisdir,"/p_parameters/05_subpopulations_restricting_meanings.R")) #SUBPOPULATION (not to be used in DPs)
-source(paste0(thisdir,"/p_parameters/06_variable_lists.R")) #OUTCOMES AND COVARIATES
-source(paste0(thisdir,"/p_parameters/07_algorithms.R")) #ALGORITHMS
-source(paste0(thisdir,"/p_parameters/08_study_design.R")) #STUDY DESIGN
+source(paste0(thisdir,"/p_parameters/05_variable_lists.R")) #OUTCOMES AND COVARIATES
+source(paste0(thisdir,"/p_parameters/06_algorithms.R")) #ALGORITHMS
+source(paste0(thisdir,"/p_parameters/07_study_design.R")) #STUDY DESIGN
 source(paste0(thisdir,"/p_parameters/99_saving_all_parameters.R")) #SAVING AND CLEANING PARAMETERS
 
 #----------------
@@ -61,10 +60,10 @@ launch_step("p_steps/01_T2_32_CreateItemSetDatasets.R")
 launch_step("p_steps/01_T2_33_CreatePromptSetDatasets.R")
 
 # CLEAN THE SPELLS
-launch_step("p_steps/01_T2_50_clean_spells.R")
+launch_step("p_steps/01_T2_40_clean_spells.R")
 
 # CREATE EXCLUSION CRITERIA for persons/spells
-launch_step("p_steps/01_T2_60_selection_criteria_from_PERSON_to_study_population.R")
+launch_step("p_steps/01_T2_50_selection_criteria_from_PERSON_to_study_population.R")
 
 launch_step("p_steps/02_T3_10_create_study_population.R")
 
