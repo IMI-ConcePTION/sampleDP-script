@@ -10,6 +10,7 @@ study_start <- ymd(20200101)
 start_lookback <- ymd(20190101)
 
 study_end <- min(instance_creation, recommended_end_date, na.rm = T)
+rm(recommended_end_date)
 
 study_years <- c("2020","2021")
 
@@ -25,7 +26,7 @@ admissible_gap_obs_periods[['ARS']] <- 365
 admissible_gap_obs_periods[['TEST']] <- 365
 admissible_gap_obs_periods[['BIPS']] <- 30
 
-days <- ifelse(thisdatasource %not in% names(admissible_gap_obs_periods),
+gap_days <- ifelse(thisdatasource %not in% names(admissible_gap_obs_periods),
                1, admissible_gap_obs_periods[[thisdatasource]])
 
 
