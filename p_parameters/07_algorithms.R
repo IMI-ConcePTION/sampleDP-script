@@ -160,12 +160,3 @@ save(concept_set_codes_our_study,file=paste0(direxp,"concept_set_codes_our_study
 save(concept_set_codes_our_study_excl,file=paste0(direxp,"concept_set_codes_our_study_excl.RData"))
 save(concept_set_codes_our_study,file=paste0(dirsmallcountsremoved,"concept_set_codes_our_study.RData"))
 save(concept_set_codes_our_study_excl,file=paste0(dirsmallcountsremoved,"concept_set_codes_our_study_excl.RData"))
-
-if (this_datasource_has_subpopulations == TRUE){ 
-  for (subpop in subpopulations[[thisdatasource]]){
-    save(concept_set_codes_our_study,file=paste0(direxpsubpop[[subpop]],"concept_set_codes_our_study.RData"))
-    save(concept_set_codes_our_study_excl,file=paste0(direxpsubpop[[subpop]],"concept_set_codes_our_study_excl.RData"))
-    save(concept_set_codes_our_study_excl,file=paste0(dirsmallcountsremovedsubpop[[subpop]],"concept_set_codes_our_study_excl.RData"))
-    
-  }
-}
