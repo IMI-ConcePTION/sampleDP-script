@@ -46,7 +46,7 @@ read_library <- function(...) {
 }
 
 list.of.packages <- c("MASS", "haven", "tidyverse", "lubridate", "AdhereR", "stringr", "purrr", "readr", "dplyr",
-                      "survival", "rmarkdown", "ggplot2", "data.table", "qpdf", "parallel", "readxl")
+                      "survival", "rmarkdown", "ggplot2", "data.table", "qpdf", "parallel", "readxl", "fst")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[, "Package"])]
 if (length(new.packages)) install.packages(new.packages)
 invisible(lapply(list.of.packages, require, character.only = T))
@@ -177,10 +177,9 @@ read_CDM_tables <- function(x) {
 }
 
 smart_save <- function(df, folder, subpop = "") {
-  qsave(df, paste0(folder, deparse(substitute(df)), suffix[[subpop]], ".qs"), nthreads = parallel::detectCores())
+  write.fst(df, paste0(folder, deparse(substitute(df)), suffix[[subpop]], ".fst"), compress = 100)
 }
 
 smart_load <- function(df, folder, subpop = "") {
-  qread(paste0(folder, deparse(substitute(df)), suffix[[subpop]], ".qs"), nthreads = parallel::detectCores())
+  read.fst(paste0(folder, df, suffix[[subpop]], ".fst"), as.data.table = T)
 }
-
