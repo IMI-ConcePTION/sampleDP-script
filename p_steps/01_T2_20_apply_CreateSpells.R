@@ -8,12 +8,7 @@
 print("COMPUTE SPELLS OF TIME FROM OBSERVATION_PERIODS")
 
 # import input datasets
-OBSERVATION_PERIODS <- data.table()
-for (file in files_ConcePTION_CDM_tables[["OBSERVATION_PERIODS"]]) {
-  temp <- fread(paste0(dirinput, file, ".csv"), colClasses = list(character = "person_id"))
-  OBSERVATION_PERIODS <- rbind(OBSERVATION_PERIODS, temp, fill = T)
-  rm(temp)
-}
+OBSERVATION_PERIODS <- read_CDM_tables("OBSERVATION_PERIODS")
 
 OBSERVATION_PERIODS <- OBSERVATION_PERIODS[, op_meaning:="all"]
 D3_output_spells_category <- CreateSpells(
