@@ -57,7 +57,6 @@ person_spell[flag==0 & entry_spell_category >= study_start & exit_spell_category
 
 ##add criteria to evaluate lookback 
 
-
 nameoutput1 <- "D3_clean_spells"
 assign(nameoutput1, person_spell)
 save(nameoutput1, file = paste0(dirtemp, nameoutput1, ".RData"), list = nameoutput1)
