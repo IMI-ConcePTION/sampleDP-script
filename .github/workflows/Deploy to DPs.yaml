@@ -30,7 +30,7 @@ jobs:
       - name: Sleep for 5 seconds
         run: sleep 5s
         shell: bash
-
+        
       - name: Update DP2
         run: |
           curl \
@@ -43,7 +43,7 @@ jobs:
       - name: Sleep for 5 seconds
         run: sleep 5s
         shell: bash
-      
+        
       - name: Update DP3
         run: |
           curl \
