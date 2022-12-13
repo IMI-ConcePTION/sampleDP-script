@@ -15,10 +15,10 @@ for (file in files_ConcePTION_CDM_tables[["OBSERVATION_PERIODS"]]) {
   rm(temp)
 }
 
-OBSERVATION_PERIODS <- OBSERVATION_PERIODS[,op_meaning:="all"]
+OBSERVATION_PERIODS <- OBSERVATION_PERIODS[, op_meaning:="all"]
 D3_output_spells_category <- CreateSpells(
   dataset = OBSERVATION_PERIODS,
-  id = "person_id" ,
+  id = "person_id",
   start_date = "op_start_date",
   end_date = "op_end_date",
   category ="op_meaning",
@@ -32,6 +32,4 @@ setkeyv(
   c("person_id", "entry_spell_category", "exit_spell_category", "num_spell", "op_meaning")
 )
 
-save(D3_output_spells_category,file = paste0(dirtemp,"D3_output_spells_category.RData"))
-
-rm(OBSERVATION_PERIODS)
+save(D3_output_spells_category, file = paste0(dirtemp,"D3_output_spells_category.RData"))
