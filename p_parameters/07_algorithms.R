@@ -160,3 +160,6 @@ save(concept_set_codes_our_study,file=paste0(direxp,"concept_set_codes_our_study
 save(concept_set_codes_our_study_excl,file=paste0(direxp,"concept_set_codes_our_study_excl.RData"))
 save(concept_set_codes_our_study,file=paste0(dirsmallcountsremoved,"concept_set_codes_our_study.RData"))
 save(concept_set_codes_our_study_excl,file=paste0(dirsmallcountsremoved,"concept_set_codes_our_study_excl.RData"))
+
+rm(conceptset, datasources_with_specific_algorithms, level1, meaning, outcome, OUTCOME, OUTCOME_events, outnarrow,
+   outpossible, SECCOMP)
