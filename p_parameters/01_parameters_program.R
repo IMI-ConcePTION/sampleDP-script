@@ -180,12 +180,13 @@ smart_save <- function(df, folder, subpop = F, extension = "qs", override_name =
   
   subpop_str <- if (isFALSE(subpop)) "" else suffix[[subpop]]
   df_name <- if (isFALSE(override_name)) deparse(substitute(df)) else override_name
+  extension <- if (!grepl("\\.", extension)) paste0(".", extension)
   
   file_name <- paste0(folder, df_name, subpop_str, extension)
   
-  if (extension == "qs") {
+  if (extension == ".qs") {
     qs::qsave(df, file_name, preset = "high", nthreads = parallel::detectCores()/2)
-  } else if (extension == "fst") {
+  } else if (extension == ".fst") {
     fst::write.fst(df, file_name, compress = 100)
   } else {
     saveRDS(df, file_name)
@@ -195,11 +196,12 @@ smart_save <- function(df, folder, subpop = F, extension = "qs", override_name =
 smart_load <- function(df, folder, subpop = F, extension = "qs") {
   
   subpop_str <- if (isFALSE(subpop)) "" else suffix[[subpop]]
+  extension <- paste0(".", extension)
   
   file_name <- paste0(folder, df, subpop_str, extension)
-  if (extension == "qs") {
+  if (extension == ".qs") {
     assign(df, qs::qread(file_name, nthreads = parallel::detectCores()/2), envir = .GlobalEnv)
-  } else if (extension == "fst") {
+  } else if (extension == ".fst") {
     assign(df, fst::read.fst(file_name, as.data.table = T), envir = .GlobalEnv)
   } else {
     assign(df, readRDS(file_name), envir = .GlobalEnv)
