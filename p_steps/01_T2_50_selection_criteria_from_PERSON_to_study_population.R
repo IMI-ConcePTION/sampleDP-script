@@ -66,12 +66,12 @@ D3_clean_spells[, c("less_than_x_days_and_not_starts_at_birth", "tot_x_days", "t
 # Keep only study spells chosen in 01_T2_043_clean_spells
 study_spells <- D3_clean_spells[is_the_study_spell == 1, ][, .(person_id, entry_spell_category, exit_spell_category)]
 study_spells <- unique(study_spells)
-D3_sel_cri_temp<-merge(study_spells,D3_sel_cri,all.y = T,by="person_id")
+D3_sel_cri_temp<-merge(study_spells,D3_sel_cri,all.y = T, by="person_id")
 
 # Keep only one row for each spell which syntethize the previously defined exclusion criteria
 D3_clean_spells <- unique(D3_clean_spells[, c("entry_spell_category", "exit_spell_category",
                                               "is_the_study_spell") := NULL])
-for (i in names(D3_clean_spells)) D3_clean_spells[is.na(get(i)), (i) := 0]
+setnafill(D3_clean_spells, fill = 0)
 D3_clean_spells <- D3_clean_spells[, lapply(.SD, max), by = person_id]
 
 # Add spells exclusion criteria to the one for person. Keep only persons which have a spell
